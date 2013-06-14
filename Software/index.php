@@ -5,9 +5,9 @@ echo "<br><br>";
 echo "The front fan is: ";
 $f_fan = exec('sudo gpio -g read 17');
 
-if ($f_fan = 1)
+if ($f_fan == 1)
   echo "ON";
-if ($f_fan = 0)
+if ($f_fan == 0)
   echo "OFF";
 
 echo "<br><br>";
