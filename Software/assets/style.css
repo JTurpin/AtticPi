@@ -1,0 +1,153 @@
+
+/**
+ * LAYOUT
+ */
+#main {
+  width:320px;
+  height: 480px;
+}
+
+#stats {
+  border-bottom: 3px #666 inset;
+}
+
+#fans {
+  margin-top: 20px;
+}
+
+#fans ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width:100%;
+}
+
+#fans li {
+  float: left;
+  width: 50%;
+}
+
+.fan {
+
+}
+
+.fan-stats {
+  margin: 0 5px;
+}
+
+.auto-manual {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.running {
+  display:block;
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 1em;
+}
+
+.fan button {
+  display:block;
+  margin: 2px auto;
+  font-size: 1em;
+  width:90%;
+  height: 36px;
+}
+
+/**
+ * AESTHETICS
+ */
+body {
+  font-family: helvetica;
+}
+
+#main {
+  background-color: #333;
+  color: #ddd;
+}
+
+#stats {
+  text-align:center;
+  padding: 3em;
+}
+
+#temp {
+  font-size: 70px;
+  font-weight: bold;
+}
+
+#temp:after {
+  content: "\00b0";
+}
+
+.temp-hot {
+  color: #f00;
+}
+
+.temp-med {
+  color: #ff0;
+}
+
+#temp-scale {
+  font-size: 0.8em;
+}
+
+.fan-state {
+  display: none;
+}
+
+h2 {
+  position: relative;
+ text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 6px 2px 6px 2px;
+  margin: 30px 5px 10px 0px;
+  color: #555;
+  background-color: #999;
+  text-shadow: 0px 1px 2px #bbb;
+  -webkit-box-shadow: 2px 2px 3px #888;
+  -moz-box-shadow: 2px 2px 3px #888;
+  box-shadow: 2px 2px 3px #888;
+}
+
+li:nth-child(2) h2 {
+/** text-align: right; **/
+ margin: 30px 0px 10px 5px;
+  -webkit-box-shadow: -2px 2px 3px #888;
+  -moz-box-shadow: -2px 2px 3px #888;
+  box-shadow: -2px 2px 3px #888;
+}
+
+.on h2 {
+  color: #ddd;
+  text-shadow: 0px 1px 2px #333;
+}
+
+li:nth-child(1).on h2:before {
+  border-color: #0f0;
+}
+
+li:nth-child(1) h2:before {
+  position: absolute; 
+  left: 0px;
+  top: 6px;
+  height: 25px;
+  content: " ";
+  border: 2px solid #333;
+}
+
+li:nth-child(2).on h2:after {
+  border-color: #0f0;
+}
+
+li:nth-child(2) h2:after {
+  position: absolute; 
+  right: 0px;
+  top: 6px;
+  height: 25px;
+  content: " ";
+  border: 2px solid #333;
+}
