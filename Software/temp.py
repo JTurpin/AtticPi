@@ -60,10 +60,12 @@ for f in range(1):
 
         if temp0 > 95 and temp0 < 110:
                 os.system('gpio -g write 17 1') # Turn on the front fan
+                os.system('date +%s > .front')  # Add lock file for front fan.
                 os.system('gpio -g write 22 0') # Turn off the back fan (this will be used when temps are falling
 
         if temp0 > 110:
                 os.system('gpio -g write 22 1') # Turn on the back fan
+                os.system('date +%s > .back')   # Add lock file for back fan
 
         print "Temp 0: ", temp0 
 
