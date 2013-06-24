@@ -48,6 +48,10 @@
   margin-bottom: 1em;
 }
 
+.running.long {
+  color: #f00;
+}
+
 .fan button {
   display:block;
   margin: 2px auto;

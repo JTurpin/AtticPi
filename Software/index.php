@@ -3,8 +3,23 @@
 $temp = rand(90, 115);
 $thresh1 = 95;
 $thresh2 = 110;
-$f_fan = ($temp > $thresh1);
-$b_fan = ($temp > $thresh2);
+
+$front_file = '.front';
+$back_file = '.back';
+
+$front_time = 0;
+$back_time = 0;
+
+// were the fans kicked on automatically?
+$front_auto = TRUE;
+$back_auto = TRUE;
+
+$f_fan = file_exists($front_file);
+$b_fan = file_exists($back_file);
+/**
+$f_fan = ($temp > $thresh1) ? 1 : 0;
+$b_fan = ($temp > $thresh2) ? 1 : 0;
+**/
 
 /**
 $temp = system('sudo python /scripts/web_temp.py');
@@ -12,8 +27,23 @@ $f_fan = exec('sudo gpio -g read 17');
 $b_fan = exec('sudo gpio -g read 22');
 **/
 
-$front_state = ($f_fan == TRUE) ? 'on' : 'off';
-$back_state = ($b_fan == TRUE) ? 'on' : 'off';
+$front_state = ($f_fan == 1) ? 'on' : 'off';
+$back_state = ($b_fan == 1) ? 'on' : 'off';
+
+
+if ($front_state == 'on') {
+  $tmp = file_get_contents($front_file);
+  $d = explode('|', $tmp);
+  $front_auto = ! isset($d[1]);
+  $front_time = $d[0];
+}
+
+if ($back_state == 'on') {
+  $tmp = file_get_contents($back_file);
+  $d = explode('|', $tmp);
+  $back_auto = ! isset($d[1]);
+  $back_time = $d[0];
+}
 
 ?>
 <html>
@@ -43,9 +73,10 @@ $back_state = ($b_fan == TRUE) ? 'on' : 'off';
     <li class="fan <?php print $front_state; ?>">
       <h2 class="fan-label">Front Fan</h2>
       <div class="fan-stats">
-        <span class="auto-manual auto">Automatic</span>
-        <span time="1234567890" class="running long">02:30:45</span>
-        <button class="stop-fan">Stop Fan</button>
+        <span class="auto-manual"><?php print ($front_auto) ? 'Automatic' : 'Manual'; ?></span>
+        <span time="<?php print $front_time; ?>" class="running">00:00</span>
+        <button style="display:none;" class="start-fan">Run 5min</button>
+        <button style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
       <!--<canvas class="timer-canvas" id="back-fan-button" width="300" height="300">-->
     </li> 
@@ -53,9 +84,10 @@ $back_state = ($b_fan == TRUE) ? 'on' : 'off';
     <li class="fan <?php print $back_state; ?>">
       <h2 class="fan-label">Back Fan</h2>
       <div class="fan-stats">
-        <span class="auto-manual manual">Manual</span>
-        <span time="1234567890" class="running short">05:00</span>
-        <button class="start-fan">Run 5min</button>
+        <span class="auto-manual"><?php print ($back_auto) ? 'Automatic' : 'Manual'; ?></span>
+        <span time="<?php print $back_time; ?>" class="running">00:00</span>
+        <button style="display:none;" class="start-fan">Run 5min</button>
+        <button style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
       <!--<canvas class="timer-canvas" id="front-fan-button" width="300" height="300">-->
     </li> 
