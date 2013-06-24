@@ -28,12 +28,12 @@ if [ -a $FILE ] ; then
   echo "${1} is already running. exiting"
   exit;
 fi
-TIME=date +%s
+TIME=`date +%s`
 
 #gpio -g mode $FAN out
 #gpio -g mode $FAN out
 #gpio -g write $FAN 1
-"${TIME}|m" > $FILE
+echo "${TIME}|m" > $FILE
 sleep ${SECONDS}s
 #gpio -g write $FAN 0
 rm $FILE
