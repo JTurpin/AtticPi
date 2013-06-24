@@ -1,7 +1,7 @@
 #!/bin/sh
 
-FRONT=22;
-BACK=17;
+FRONT=17;
+BACK=22;
 
 if [ -z "$1" ] ; then
   echo "USAGE $0 <front|back> [force]"
