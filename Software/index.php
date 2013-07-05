@@ -1,5 +1,42 @@
 <?php
 
+/**
+ * TEST OUTSIDE WEATHER INFO
+ */
+require "functions.php";
+$weather = new Weather(80233);
+$icon = $weather->get_icon();
+$outside_temp = $weather->get_temp();;
+
+
+
+if (isset($_POST['cmd']) && isset($_POST['fan'])) {
+  $allowed_commands = array("on","off");
+  $allowed_fans = array("front","back");
+  $cmd = $_POST['cmd'];
+  $fan = $_POST['fan'];
+  $param = (int) $_POST['param'];
+  if (in_array($cmd, $allowed_commands) && in_array($fan, $allowed_fans)) {
+    $path = getcwd();
+    switch ($cmd) {
+      case "on":
+        $exec = "$path/fan_$cmd.sh $fan $param";
+        break;
+      case "off":
+        // force the fan off
+        $exec = "$path/fan_$cmd.sh $fan $param";
+        break;
+    }
+    echo $exec ."\n";
+    $res = shell_exec($exec);
+    echo var_export($res,1);
+  }
+  else {
+    echo "Something happened.\n" . print_r($_POST,1);
+  }
+  exit;
+}
+
 $temp = rand(90, 115);
 $thresh1 = 95;
 $thresh2 = 110;
@@ -16,16 +53,6 @@ $back_auto = TRUE;
 
 $f_fan = file_exists($front_file);
 $b_fan = file_exists($back_file);
-/**
-$f_fan = ($temp > $thresh1) ? 1 : 0;
-$b_fan = ($temp > $thresh2) ? 1 : 0;
-**/
-
-/**
-$temp = system('sudo python /scripts/web_temp.py');
-$f_fan = exec('sudo gpio -g read 17');
-$b_fan = exec('sudo gpio -g read 22');
-**/
 
 $front_state = ($f_fan == 1) ? 'on' : 'off';
 $back_state = ($b_fan == 1) ? 'on' : 'off';
@@ -65,38 +92,46 @@ if ($back_state == 'on') {
 <body>
 <div id="main">
   <div id="stats">
-    <span id="temp"><?php print $temp; ?></span><span id="temp-scale">F</span>
+    <div id="outside">
+      <span class="weatherIcon"><?php print $icon; ?></span>
+      <span class="temp"><?php print $outside_temp; ?></span>
+      <span class="temp-scale">F</span>
+    </div>
+    <div id="inside">
+      <span class="temp"><?php print $temp; ?></span>
+      <span class="temp-scale">F</span>
+    </div>
   </div>
 
   <div id="fans">
     <ul>
-    <li class="fan <?php print $front_state; ?>">
+    <li id="front" class="fan <?php print $front_state; ?>">
       <h2 class="fan-label">Front Fan</h2>
       <div class="fan-stats">
         <span class="auto-manual"><?php print ($front_auto) ? 'Automatic' : 'Manual'; ?></span>
         <span time="<?php print $front_time; ?>" class="running">00:00</span>
-        <button style="display:none;" class="start-fan">Run 5min</button>
-        <button style="display:none;" class="stop-fan">Stop Fan</button>
+        <button name="front" style="display:none;" class="start-fan">Run 5min</button>
+        <button name="front" style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
       <!--<canvas class="timer-canvas" id="back-fan-button" width="300" height="300">-->
-    </li> 
+    </li>
 
-    <li class="fan <?php print $back_state; ?>">
+    <li id="back" class="fan <?php print $back_state; ?>">
       <h2 class="fan-label">Back Fan</h2>
       <div class="fan-stats">
         <span class="auto-manual"><?php print ($back_auto) ? 'Automatic' : 'Manual'; ?></span>
         <span time="<?php print $back_time; ?>" class="running">00:00</span>
-        <button style="display:none;" class="start-fan">Run 5min</button>
-        <button style="display:none;" class="stop-fan">Stop Fan</button>
+        <button name="back" style="display:none;" class="start-fan">Run 5min</button>
+        <button name="back" style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
       <!--<canvas class="timer-canvas" id="front-fan-button" width="300" height="300">-->
-    </li> 
+    </li>
     </ul>
   </div>
-  
-</div> 
+
+</div>
 <script>
-  
+
 </script>
   <script src="assets/atticpi.js?v=1"></script>
 </body>

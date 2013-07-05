@@ -1,5 +1,19 @@
 
 /**
+ * FONT
+ */
+@font-face
+{
+  font-family: Conky;
+  src: url(ConkyWeather.ttf);
+}
+
+.weatherIcon {
+  font-family: Conky;
+  font-size: 32px;
+}
+
+/**
  * LAYOUT
  */
 #main {
@@ -65,6 +79,7 @@
  */
 body {
   font-family: helvetica;
+  margin: 0;
 }
 
 #main {
@@ -73,17 +88,34 @@ body {
 }
 
 #stats {
+  position: relative;
+  display:block;
   text-align:center;
-  padding: 3em;
+  height:180px;
+  width: 320px;
 }
 
-#temp {
+#inside {
+  padding: 3em;
+}
+#inside .temp {
   font-size: 70px;
   font-weight: bold;
 }
 
-#temp:after {
+.temp:after {
   content: "\00b0";
+}
+
+#outside {
+  display:block;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+#outside .temp {
+  font-size: 32px;
 }
 
 .temp-hot {
