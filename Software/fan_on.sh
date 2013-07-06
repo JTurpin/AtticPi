@@ -30,10 +30,10 @@ if [ -a $FILE ] ; then
 fi
 TIME=`date +%s`
 
-#gpio -g mode $FAN out
-#gpio -g mode $FAN out
-#gpio -g write $FAN 1
+gpio -g mode $FAN out
+gpio -g mode $FAN out
+gpio -g write $FAN 1
 echo "${TIME}|m" > $FILE
 sleep ${SECONDS}s
-#gpio -g write $FAN 0
+gpio -g write $FAN 0
 rm $FILE

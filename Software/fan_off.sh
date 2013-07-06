@@ -28,6 +28,6 @@ if [ ! -a "$FILE" ] &&  [ -z "$2" ] ; then
   exit;
 fi
 
-#gpio -g mode $FAN out
-#gpio -g write $FAN 0
+gpio -g mode $FAN out
+gpio -g write $FAN 0
 rm $FILE
