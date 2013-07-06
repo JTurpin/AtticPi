@@ -1,34 +1,22 @@
 (function ($) {
-  // set a random temp
-  /**
-   * test data. This info will actually be added by the php.
-   */
-  /**
-  var mintemp = 90;
-  var maxtemp = 140;
-  var tmp = Math.round(Math.random() * (maxtemp - mintemp) + mintemp);
-  $('#temp').text(tmp);
-  /**/
 
+  /**
+   * Temperature thresholds
+   */
   var th1 = 95;
   var th2 = 110;
 
-
-  var colorizeTemp = function (f) {
-
-    var temp = f.html();
+  $('.temp').each(function(e) {
+    var temp = $(this).html();
 
     if ( temp > th1 && temp < th2 ) {
-      f.addClass('temp-med');
+      $(this).addClass('temp-med');
     }
     else if ( temp > th2 ) {
-      f.addClass('temp-hot');
+      $(this).addClass('temp-hot');
     }
-    
-  }
-  $('.temp').each(function(e) {
-    colorizeTemp($(this)); 
   });
+    
 
   // Format a time from a number of seconds
   var toHHMMSS = function (sec_num) {
@@ -49,6 +37,9 @@
     counter.text(toHHMMSS(sec));
   }
 
+  /**
+   * Do the whole sending of the ajax command.
+   */
   var sendCommand = function(command,which_fan, parameter) {
     $.ajax({
       type: "POST",
@@ -60,25 +51,26 @@
   }
 
 
+  /**
+   * Click the run fan button and let the expected happen.
+   */
   $('.start-fan').click(function(e){
     // send a call back to the server to start the fan
-    var command = "on";   
-    var which = $(this).attr('name');
-    var timer = 5;
-
-    sendCommand(command, which, timer);
-    //console.log(which);
-    // switch the button to stop-fan
     var button = $(this);
-    var sib = $(this).siblings("button");
+    var which = button.attr('name');
+    var timer = 300;
+
+    // switch the button to stop-fan
+    var sib = button.siblings("button");
+
+    // start the count-down timer.
+    var running = button.parent().find('.running');
+    var li = button.parentsUntil('ul');
+
+    sendCommand("on", which, timer);
+
     button.attr('disabled', 'disabled').hide();
     sib.removeAttr('disabled').show();
-      
-    // start the count-down timer.
-    var running = $(this).parent().find('.running');
-    //var li = $(this).parent().find('li');
-    var li = $(this).parentsUntil('ul');
-    //console.log(li);
     li.removeClass("off").addClass("on");
 
     var interval = setInterval(function() {
@@ -87,34 +79,39 @@
         if (timer == 0) {
           // set the button back
           clearInterval(button.attr("interval"));
+          setCounter(running);
+
           sib.hide();
           button.removeAttr('disabled').show();
-          setCounter(running);
           li.removeClass("on").addClass("off");
         }
 
     }, 1000);
+
     button.attr('interval', interval);
   });
 
+  /**
+   * Stop the fan, If the fan was started automatically, the fan will restart
+   * during the next check.
+   */
   $('.stop-fan').click(function(e){
-
     // Send a Stop command
-    var command = "off";   
-    var which = $(this).attr('name');
-    var force = 5;
-
-    var li = $(this).parentsUntil('ul');
-    li.removeClass("on").addClass("off");
-    sendCommand(command, which, force);
-    // switch the button to start-fan
     var button = $(this);
-    var sib = $(this).siblings("button");
-    button.attr('disabled', 'disabled').hide();
+    var which = button.attr('name');
+    var sib   = button.siblings("button");
+    var li    = button.parentsUntil('ul');
+
+    var running = button.parent().find('.running');
+
+    sendCommand("off", which, 1);
     clearInterval(sib.attr("interval"));
-    sib.removeAttr('disabled').show();
-    var running = $(this).parent().find('.running');
     setCounter(running);
+
+    li.removeClass("on").addClass("off");
+    // switch the button to start-fan
+    button.attr('disabled', 'disabled').hide();
+    sib.removeAttr('disabled').show();
   });
 
   /**
@@ -129,28 +126,16 @@
    * if the fan is running, we have other things to do.
    */
   $('.fan.on').each(function(e){
+    var button = $(this).find('button.start-fan');
     var t = $(this).find('.running').attr('time');
     var running = $(this).find('.running');
-    setInterval(function() {
+    var interval = setInterval(function() {
       running.text(toHHMMSS(Math.floor($.now() / 1000) - t));
     }, 1000);
+
+    button.attr('interval', interval);
 
     $(this).find(".stop-fan").show();
   });
 
-
-
 }(jQuery));
-
-String.prototype.toHHMMSS = function (sec_num) {
-    //var sec_num = parseInt(this, 10); // don't forget the second parm
-    var hours   = Math.floor(sec_num / 3600);
-    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-    if (hours   < 10) {hours   = "0"+hours;}
-    if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    var time    = hours+':'+minutes+':'+seconds;
-    return time;
-}

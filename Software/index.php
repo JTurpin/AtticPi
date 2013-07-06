@@ -113,7 +113,6 @@ if ($back_state == 'on') {
         <button name="front" style="display:none;" class="start-fan">Run 5min</button>
         <button name="front" style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
-      <!--<canvas class="timer-canvas" id="back-fan-button" width="300" height="300">-->
     </li>
 
     <li id="back" class="fan <?php print $back_state; ?>">
@@ -124,7 +123,6 @@ if ($back_state == 'on') {
         <button name="back" style="display:none;" class="start-fan">Run 5min</button>
         <button name="back" style="display:none;" class="stop-fan">Stop Fan</button>
       </div>
-      <!--<canvas class="timer-canvas" id="front-fan-button" width="300" height="300">-->
     </li>
     </ul>
   </div>
